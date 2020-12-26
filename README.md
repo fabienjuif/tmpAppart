@@ -1,0 +1,6 @@
+- [ ] token should not be set into localStorage but api shout use cookies
+- [ ] /api/data should work without the "month" query
+- [ ] ui should use one query by chart to get the all year
+- [ ] endpoints (api) documentation
+- [ ] only my netatmo account should work on AWS
+- [ ] ui should be hosted in cloudfront with S3

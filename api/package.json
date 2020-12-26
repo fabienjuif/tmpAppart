@@ -1,0 +1,28 @@
+{
+  "name": "@tmpAppart/api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.818.0",
+    "date-fns": "^2.16.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-source-map-support": "^2.1.2",
+    "serverless": "^2.16.1",
+    "serverless-dotenv-plugin": "^3.1.0",
+    "serverless-offline": "^6.5.0",
+    "serverless-webpack": "^5.3",
+    "webpack": "^5.11.1",
+    "webpack-node-externals": "^2.5.0"
+  }
+}

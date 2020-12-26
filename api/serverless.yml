@@ -1,0 +1,77 @@
+service: tmpAppart
+frameworkVersion: "2"
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+    packager: yarn
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-3
+  endpointType: REGIONAL # try to lower latency
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  list:
+    handler: src/list/handler.list
+    timeout: 30
+    events:
+      - http:
+          path: api/data
+          method: get
+          cors: true
+  getTokens:
+    handler: src/get-tokens/handler.getTokens
+    timeout: 30
+    events:
+      - http:
+          path: api/tokens
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    StatsDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: client_id
+            AttributeType: S
+          - AttributeName: date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: client_id
+            KeyType: HASH
+          - AttributeName: date
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 2
+        #   WriteCapacityUnits: 2
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
