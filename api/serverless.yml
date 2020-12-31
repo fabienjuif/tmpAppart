@@ -18,7 +18,6 @@ package:
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
   region: eu-west-3
   endpointType: REGIONAL # try to lower latency
   apiGateway:

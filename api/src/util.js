@@ -4,9 +4,15 @@ import jsonwebtoken from "jsonwebtoken";
 const sign = promisify(jsonwebtoken.sign);
 const verify = promisify(jsonwebtoken.verify);
 
+["CORS_ALLOW_ORIGIN"].forEach((key) => {
+  if (!process.env[key]) {
+    throw new Error(`${key} env must be set!`);
+  }
+});
+
 const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Authorization",
-  "Access-Control-Allow-Origin": "http://localhost:3000",
+  "Access-Control-Allow-Origin": process.env.CORS_ALLOW_ORIGIN,
   "Access-Control-Allow-Methods": "OPTIONS,GET",
   "Access-Control-Allow-Credentials": true,
 };

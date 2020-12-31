@@ -6,14 +6,21 @@
   "scripts": {
     "start": "run-p start:*",
     "start:ui": "yarn --cwd ui start",
-    "deploy": "run-p deploy:*",
-    "deploy:api": "yarn --cwd api deploy"
+    "build:ui": "yarn --cwd ui build",
+    "deploy": "run-s deploy:development",
+    "deploy:development": "NODE_env=development run-p deploy:development:api",
+    "deploy:development:api": "yarn --cwd api deploy --stage dev",
+    "deploy:production": "NODE_ENV=production run-p deploy:production:api deploy:ui",
+    "deploy:production:api": "yarn --cwd api deploy --stage production",
+    "deploy:ui": "run-s build:ui deploy:ui:deploy",
+    "deploy:ui:deploy": "gh-pages -d ui/build"
   },
   "workspaces": [
     "api",
     "ui"
   ],
   "devDependencies": {
+    "gh-pages": "^3.1.0",
     "npm-run-all": "^4.1.5"
   }
 }
