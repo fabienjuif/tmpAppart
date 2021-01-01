@@ -146,6 +146,12 @@ export const list = addLambdaUtil(
 
     const dateS = new Date(`${year}-${month}-01T00:00:00.000Z`);
     const dateE = addDays(addMonths(dateS, 1), -1);
+
+    // shorten - we known we will not have data from the future
+    if (dateS >= new Date()) {
+      return sendResponse({ infos, data: [] });
+    }
+
     const utcStart = new Date(
       Date.UTC(dateS.getUTCFullYear(), dateS.getUTCMonth(), dateS.getUTCDate())
     );

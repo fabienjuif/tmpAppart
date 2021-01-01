@@ -5,6 +5,8 @@ import AuthProvider from "./Auth";
 const App = () => {
   const [hide, setHide] = useState({ humidity: false });
 
+  const year = new Date().getUTCFullYear();
+
   return (
     <AuthProvider>
       <div>
@@ -17,8 +19,10 @@ const App = () => {
         />
         Hide Humidity
         <div style={{ position: "relative" }}>
-          <Chart year={2020} hide={hide} />
-          <Chart year={2019} hide={hide} />
+          {year}
+          <Chart year={year} hide={hide} />
+          {year - 1}
+          <Chart year={year - 1} hide={hide} />
         </div>
       </div>
     </AuthProvider>
