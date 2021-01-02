@@ -275,11 +275,6 @@ export const list = addLambdaUtil(
       infos.newData.indoor = knownIndoorValues.length < daysInMonth;
 
       // 25 is the dynamo limit
-      console.log(
-        "token.clientId",
-        token.clientId,
-        JSON.stringify(values, null, 2)
-      );
       const chunks = chunk(values, 25);
       await Promise.all(
         chunks.map((chunk) =>
