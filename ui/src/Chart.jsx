@@ -141,7 +141,6 @@ const Month = ({ year, month, hide = { humidity: false } }) => {
     >
       <VictoryArea
         data={chart.data[1]}
-        barRatio={0.1}
         alignment="start"
         interpolation="stepBefore"
         style={{
@@ -152,7 +151,7 @@ const Month = ({ year, month, hide = { humidity: false } }) => {
       />
       <VictoryBar
         data={chart.data[0]}
-        barRatio={0.7}
+        barWidth={3}
         alignment="start"
         style={{ data: { fill: "rgb(153, 63, 35)" } }}
       />
