@@ -1,11 +1,18 @@
 import { createContext, useState, useEffect, useContext } from "react";
 
-export const AuthContext = createContext({ token: null });
+const login = () => {
+  window.localStorage.removeItem("token");
+  window.location.replace(
+    `${process.env.REACT_APP_API_BASE_URI}/tokens?from=${window.location.href}`
+  );
+};
 
-export const useToken = () => useContext(AuthContext).token;
+export const AuthContext = createContext({ token: null, login });
+
+export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
-  const [value, setValue] = useState({ token: null });
+  const [value, setValue] = useState({ token: null, login });
 
   useEffect(() => {
     let token;
@@ -19,9 +26,7 @@ const AuthProvider = ({ children }) => {
     }
 
     if (!token) {
-      window.location.replace(
-        `${process.env.REACT_APP_API_BASE_URI}/tokens?from=${window.location.href}`
-      );
+      login();
     } else {
       window.localStorage.setItem("token", token);
       if (searchParams.has("token")) {

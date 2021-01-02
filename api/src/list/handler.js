@@ -194,6 +194,7 @@ export const list = addLambdaUtil(
     infos.requests.indoor = knownIndoorValues.length < daysInMonth;
 
     let indoorError = false;
+    let noValidToken = false;
     let [outdoorValues = [], indoorValues = []] = await Promise.all([
       knownOutdoorValues.length >= daysInMonth
         ? knownOutdoorValues
@@ -207,9 +208,24 @@ export const list = addLambdaUtil(
             getIndoorValues(api)(addDays(utcStart, -1), addDays(utcEnd, 1))
           ).catch((err) => {
             indoorError = true;
-            console.warn(err);
+            // token is not valid
+            if (err.status === 403) {
+              console.log("No valid token");
+              noValidToken = true;
+            } else {
+              console.warn(err);
+            }
           }),
     ]);
+
+    if (noValidToken) {
+      return sendErrorResponse(
+        {
+          message: "No valid token",
+        },
+        403
+      );
+    }
 
     if (outdoorValues.length < daysInMonth) {
       outdoorValues = eachDays

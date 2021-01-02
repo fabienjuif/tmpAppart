@@ -9,7 +9,7 @@ import {
   VictoryTooltip,
   VictoryArea,
 } from "victory";
-import { useToken } from "./Auth";
+import { useAuth } from "./Auth";
 
 var PERCENT = new Intl.NumberFormat(undefined, {
   style: "percent",
@@ -32,7 +32,7 @@ const TEMPERATURE = {
 
 const Month = ({ year, month, hide = { humidity: false } }) => {
   const [chart, setChart] = useState({ data: [], maxima: undefined });
-  const token = useToken();
+  const { token, login } = useAuth();
 
   useEffect(() => {
     const getData = () => {
@@ -49,7 +49,13 @@ const Month = ({ year, month, hide = { humidity: false } }) => {
               },
             }
           )
-            .then((d) => d.json())
+            .then((d) => {
+              if (d.status === 403) {
+                return login();
+              }
+
+              return d.json();
+            })
             .catch(console.warn)
         )
       ).then((data) => {
@@ -113,7 +119,7 @@ const Month = ({ year, month, hide = { humidity: false } }) => {
     if (token) {
       getData();
     }
-  }, [month, token, year]);
+  }, [login, month, token, year]);
 
   if (chart.data.length <= 0) return null;
 
