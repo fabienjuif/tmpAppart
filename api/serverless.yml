@@ -5,6 +5,7 @@ plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-api-compression
 
 custom:
   webpack:
@@ -22,6 +23,7 @@ provider:
   endpointType: REGIONAL # try to lower latency
   apiGateway:
     shouldStartNameWithService: true
+    minimumCompressionSize: 1024
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
   iamRoleStatements:
