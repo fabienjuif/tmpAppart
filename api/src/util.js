@@ -43,7 +43,6 @@ export const addLambdaUtil = ({ cors = false }, handler) => (
   callback
 ) => {
   const sendResponse = (body, headers = {}, statusCode = 200) => {
-    console.time("sendResponse");
     let _headers = {
       "Content-Type": "application/json",
       ...headers,
@@ -60,8 +59,6 @@ export const addLambdaUtil = ({ cors = false }, handler) => (
       headers: _headers,
       body: JSON.stringify(body),
     });
-
-    console.timeEnd("sendResponse");
   };
 
   const sendErrorResponse = (body, statusCode = 500) =>

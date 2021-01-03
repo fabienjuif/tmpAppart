@@ -1,4 +1,3 @@
-- [ ] add cache headers to past requests
 - [ ] token should not be set into localStorage but api shout use cookies
 - [ ] /api/data should work without the "month" query
 - [ ] ui should use one query by chart to get the all year

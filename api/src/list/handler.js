@@ -7,12 +7,17 @@ import {
   parseISO,
   isDate,
   eachDayOfInterval,
+  isBefore,
 } from "date-fns";
 import { promiseTimeout, addLambdaUtil, jwt } from "../util";
 import { createNetatmoAPI } from "../lib";
 import getTemps from "./temp";
 
 const TIMEZONE_OFFSET_MS = new Date().getTimezoneOffset() * 60000;
+
+const CACHE_CONTROL_HEADERS = {
+  "Cache-Control": "private,max-age=86400", // 24H
+};
 
 [
   "NETATMO_HOME_ID",
@@ -148,8 +153,8 @@ export const list = addLambdaUtil(
     const dateE = addDays(addMonths(dateS, 1), -1);
 
     // shorten - we known we will not have data from the future
-    if (dateS >= new Date()) {
-      return sendResponse({ infos, data: [] });
+    if (isBefore(new Date(), dateS)) {
+      return sendResponse({ infos, data: [] }, CACHE_CONTROL_HEADERS);
     }
 
     const utcStart = new Date(
@@ -296,6 +301,13 @@ export const list = addLambdaUtil(
       );
     }
 
-    return sendResponse({ infos, data: values });
+    // send response (keep in mind we are here if query is not in the future)
+    return sendResponse(
+      { infos, data: values },
+      // tell client it could use cache if month is prior to the current one
+      isBefore(dateS, addMonths(new Date(), -1))
+        ? CACHE_CONTROL_HEADERS
+        : undefined
+    );
   }
 );
